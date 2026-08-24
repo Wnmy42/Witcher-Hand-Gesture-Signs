@@ -6,9 +6,10 @@ from mediapipe.tasks.python import vision
 
 import os
 
+# You can update the username according to your device.
 dosya_yolu = r"C:\Users\BURAK\Desktop\witsign\dataset.csv"
 
-# 1. Model dosyasını ve ayarları tanımla
+# Define the model file and settings
 base_options = python.BaseOptions(
     model_asset_path=r"C:\Users\BURAK\Desktop\witsign\hand_landmarker.task")
 options = vision.HandLandmarkerOptions(
@@ -19,7 +20,7 @@ options = vision.HandLandmarkerOptions(
 detector = vision.HandLandmarker.create_from_options(options)
 
 cap = cv2.VideoCapture(0)
-etiket = 'Igni'  # Kaydetmek istediğiniz büyü ismi
+etiket = 'Igni'  # The name of the sign you want to save
 print(
     f"'{etiket}' için veri toplanıyor. Kaydetmek için 's', çıkmak için 'q' tuşuna"
     ' basın.'
@@ -38,7 +39,7 @@ while cap.isOpened():
 
     result = detector.detect(mp_image)
 
-    # Tek bir waitKey kullanarak tuşu hafızada tutuyoruz
+    # Using a single waitKey to keep the key in memory
     key = cv2.waitKey(1) & 0xFF
 
     if result.hand_landmarks:
@@ -47,7 +48,6 @@ while cap.isOpened():
                 cx, cy = int(lm.x * width), int(lm.y * height)
                 cv2.circle(frame, (cx, cy), 4, (0, 255, 0), -1)
 
-            # 's' tuşuna basıldıysa
             if key == ord('s'):
                 row = []
                 base_x = hand_landmarks[0].x
@@ -61,7 +61,6 @@ while cap.isOpened():
 
                 row.append(etiket)
 
-                # CSV dosyasına yazma işlemi
                 with open(dosya_yolu, mode='a', newline='') as f:
                     writer = csv.writer(f)
                     writer.writerow(row)
@@ -69,7 +68,6 @@ while cap.isOpened():
 
     cv2.imshow('Witcher Veri Toplama', frame)
 
-    # 'q' tuşuna basılırsa çık
     if key == ord('q'):
         break
 

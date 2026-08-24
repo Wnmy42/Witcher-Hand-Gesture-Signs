@@ -6,11 +6,11 @@ import numpy as np
 from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 
-# --- DOSYA YOLU ---
+# You can update the username according to your device.
 klasor_yolu = r"C:\Users\BURAK\Desktop\witsign"
 model_yolu = os.path.join(klasor_yolu, "witcher_model.p")
 
-# Eğitilmiş modeli yükle
+# Load the trained model
 try:
   with open(model_yolu, "rb") as f:
     model = pickle.load(f)
@@ -22,7 +22,7 @@ except FileNotFoundError:
   )
   exit()
 
-# MediaPipe Güncel El Tespiti Ayarları
+# MediaPipe current hand detection settings
 base_options = python.BaseOptions(model_asset_path=r"C:\Users\BURAK\Desktop\witsign\hand_landmarker.task")
 options = vision.HandLandmarkerOptions(
     base_options=base_options,
@@ -49,12 +49,10 @@ while cap.isOpened():
 
   if result.hand_landmarks:
     for hand_landmarks in result.hand_landmarks:
-      # Görsel olarak ekrana noktaları çizelim
       for lm in hand_landmarks:
         cx, cy = int(lm.x * width), int(lm.y * height)
         cv2.circle(frame, (cx, cy), 4, (0, 255, 0), -1)
 
-      # Eğitim aşamasındaki gibi koordinatları normalleştir
       row = []
       base_x = hand_landmarks[0].x
       base_y = hand_landmarks[0].y
@@ -65,11 +63,11 @@ while cap.isOpened():
         row.append(lm.y - base_y)
         row.append(lm.z - base_z)
 
-      # Modeli kullanarak tahmin et
+      # Predict using the model
       X_test = np.array([row])
       tahmin = model.predict(X_test)[0]
 
-      # Ekrana büyünün adını yazdır
+      # Display the sign name on the screen
       cv2.putText(
           frame,
           f"Sign: {tahmin}",
