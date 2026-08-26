@@ -7,23 +7,22 @@ from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 
 # You can update the username according to your device.
-klasor_yolu = r"C:\Users\BURAK\Desktop\witsign"
+klasor_yolu = r"C:\Users\BURAK\Desktop\witchersign"
 model_yolu = os.path.join(klasor_yolu, "witcher_model.p")
 
 # Load the trained model
 try:
   with open(model_yolu, "rb") as f:
     model = pickle.load(f)
-  print(f"Model yüklendi: {model_yolu}")
+  print(f"Model loaded: {model_yolu}")
 except FileNotFoundError:
   print(
-      f"HATA: '{model_yolu}' bulunamadı! Önce train_model.py dosyasını"
-      " çalıştırmalısınız."
+      f"ERROR: '{model_yolu}' could not be found!You have to run train_model.py file first."
   )
   exit()
 
 # MediaPipe current hand detection settings
-base_options = python.BaseOptions(model_asset_path=r"C:\Users\BURAK\Desktop\witsign\hand_landmarker.task")
+base_options = python.BaseOptions(model_asset_path=r"C:\Users\BURAK\Desktop\witchersign\hand_landmarker.task")
 options = vision.HandLandmarkerOptions(
     base_options=base_options,
     running_mode=vision.RunningMode.IMAGE,
@@ -32,7 +31,7 @@ options = vision.HandLandmarkerOptions(
 detector = vision.HandLandmarker.create_from_options(options)
 
 cap = cv2.VideoCapture(0)
-print("Witcher Büyü Sistemi Aktif! Çıkmak için 'q' tuşuna basın.")
+print("Witcher Sign system is active! Press 'q' to quit.")
 
 while cap.isOpened():
   success, frame = cap.read()

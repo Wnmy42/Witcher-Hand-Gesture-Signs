@@ -7,11 +7,11 @@ from mediapipe.tasks.python import vision
 import os
 
 # You can update the username according to your device.
-dosya_yolu = r"C:\Users\BURAK\Desktop\witsign\dataset.csv"
+dosya_yolu = r"C:\Users\BURAK\Desktop\witchersign\dataset.csv"
 
 # Define the model file and settings
 base_options = python.BaseOptions(
-    model_asset_path=r"C:\Users\BURAK\Desktop\witsign\hand_landmarker.task")
+    model_asset_path=r"C:\Users\BURAK\Desktop\witchersign\hand_landmarker.task")
 options = vision.HandLandmarkerOptions(
     base_options=base_options,
     running_mode=vision.RunningMode.IMAGE,
@@ -22,8 +22,7 @@ detector = vision.HandLandmarker.create_from_options(options)
 cap = cv2.VideoCapture(0)
 etiket = 'Igni'  # The name of the sign you want to save
 print(
-    f"'{etiket}' için veri toplanıyor. Kaydetmek için 's', çıkmak için 'q' tuşuna"
-    ' basın.'
+    f"Collecting data for '{etiket}'. Press 's' to save, 'q' to quit."
 )
 
 while cap.isOpened():
@@ -64,9 +63,9 @@ while cap.isOpened():
                 with open(dosya_yolu, mode='a', newline='') as f:
                     writer = csv.writer(f)
                     writer.writerow(row)
-                print(f'BAŞARILI: Örnek kaydedildi ({etiket})')
+                print(f'SUCCESS: Sample saved ({etiket})')
 
-    cv2.imshow('Witcher Veri Toplama', frame)
+    cv2.imshow('Witcher Data Collection', frame)
 
     if key == ord('q'):
         break
