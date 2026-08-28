@@ -3,15 +3,17 @@ import cv2
 import mediapipe as mp
 from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
-
 import os
 
-# You can update the username according to your device.
-dosya_yolu = r"C:\Users\BURAK\Desktop\witchersign\dataset.csv"
+# Automatically gets the directory where this Python file is located
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Creates the correct path dynamically on any computer
+dosya_yolu = os.path.join(BASE_DIR, "dataset.csv")
+task_yolu = os.path.join(BASE_DIR, "hand_landmarker.task")
 
 # Define the model file and settings
-base_options = python.BaseOptions(
-    model_asset_path=r"C:\Users\BURAK\Desktop\witchersign\hand_landmarker.task")
+base_options = python.BaseOptions(model_asset_path=task_yolu)
 options = vision.HandLandmarkerOptions(
     base_options=base_options,
     running_mode=vision.RunningMode.IMAGE,
@@ -21,9 +23,7 @@ detector = vision.HandLandmarker.create_from_options(options)
 
 cap = cv2.VideoCapture(0)
 etiket = 'Igni'  # The name of the sign you want to save
-print(
-    f"Collecting data for '{etiket}'. Press 's' to save, 'q' to quit."
-)
+print(f"Collecting data for '{etiket}'. Press 's' to save, 'q' to quit.")
 
 while cap.isOpened():
     success, frame = cap.read()

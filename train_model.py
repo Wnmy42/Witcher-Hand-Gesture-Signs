@@ -5,21 +5,20 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 
+# Automatically gets the directory where this Python file is located
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# You can update the username according to your device.
-klasor_yolu = r"C:\Users\BURAK\Desktop\witchersign"
+# Creates the correct paths dynamically on any computer
+dataset_yolu = os.path.join(BASE_DIR, "dataset.csv")
+model_yolu = os.path.join(BASE_DIR, "witcher_model.p")
 
-dataset_yolu = os.path.join(klasor_yolu, "dataset.csv")
-model_yolu = os.path.join(klasor_yolu, "witcher_model.p")
-
-print(f"Read the dataset: {dataset_yolu}")
+print(f"Reading the dataset: {dataset_yolu}")
 
 # 1. Read the dataset
 try:
     df = pd.read_csv(dataset_yolu, header=None)
 except FileNotFoundError:
-    print(
-        f"ERROR: '{dataset_yolu}' could not be found! First you have to collect data.")
+    print(f"ERROR: '{dataset_yolu}' could not be found! First you have to collect data.")
     exit()
 
 # 2. Separate into features and labels
@@ -37,13 +36,13 @@ if len(X) > 5:
     model = KNeighborsClassifier(n_neighbors=3)
     model.fit(X_train, y_train)
     dogruluk = model.score(X_test, y_test)
-    print(f"Model Accuracy Rate : %{dogruluk * 100:.2f}")
+    print(f"Model Accuracy Rate: {dogruluk * 100:.2f}%")
 else:
     model = KNeighborsClassifier(n_neighbors=1)
     model.fit(X, y)
     print("Warning: No test data was split because the number of samples is low.")
 
-# 4. Save the model to the absolute path
+# 4. Save the model to the dynamic path
 with open(model_yolu, "wb") as f:
     pickle.dump(model, f)
 
